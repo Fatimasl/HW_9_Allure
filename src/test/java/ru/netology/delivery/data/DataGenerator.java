@@ -20,7 +20,19 @@ public class DataGenerator {
         return date;
     }
 
-    public static String generateCity(String locale) {
+    public static String generateCityUnavailableForDelivery(String locale) {
+        String[] arrayOfCities = {
+                "Донецк",
+                "Луганск",
+                "Херсон",
+                "Запорожье"
+        };
+        Random r = new Random();
+        String city = arrayOfCities[r.nextInt(3)];
+        return city;
+    }
+
+    public static String generateCityAvailableForDelivery(String locale) {
         // TODO: добавить логику для объявления переменной city и задания её значения, генерацию можно выполнить
         // с помощью Faker, либо используя массив валидных городов и класс Random
         //Faker faker = new Faker(Locale.forLanguageTag(locale));
@@ -31,7 +43,6 @@ public class DataGenerator {
                 "Уфа",
                 "Улан-Удэ",
                 "Махачкала",
-                "Донецк",
                 "Магас",
                 "Нальчик",
                 "Элиста",
@@ -39,7 +50,6 @@ public class DataGenerator {
                 "Петрозаводск",
                 "Сыктывкар",
                 "Симферополь",
-                "Луганск",
                 "Йошкар-Ола",
                 "Саранск",
                 "Якутск",
@@ -68,7 +78,6 @@ public class DataGenerator {
                 "Волгоград",
                 "Вологда",
                 "Воронеж",
-                "Запорожье",
                 "Иваново",
                 "Иркутск",
                 "Калининград",
@@ -104,7 +113,6 @@ public class DataGenerator {
                 "Тула",
                 "Тюмень",
                 "Ульяновск",
-                "Херсон",
                 "Челябинск",
                 "Ярославль",
                 "Москва",
@@ -117,7 +125,7 @@ public class DataGenerator {
                 "Салехард"
         };
         Random r = new Random();
-        String city = arrayOfCities[r.nextInt(88)];
+        String city = arrayOfCities[r.nextInt(84)];
         return city;
     }
 
@@ -141,12 +149,22 @@ public class DataGenerator {
         private Registration() {
         }
 
-        public static UserInfo generateUser(String locale) {
+        public static UserInfo generateUserForDelivery(String locale) {
             // TODO: добавить логику для создания пользователя user с использованием методов generateCity(locale),
             // generateName(locale), generatePhone(locale)
             DataGenerator dataGenerator = new DataGenerator();
             UserInfo user = new UserInfo(
-                    dataGenerator.generateCity(locale),
+                    dataGenerator.generateCityAvailableForDelivery(locale),
+                    dataGenerator.generateName(locale),
+                    dataGenerator.generatePhone(locale));
+
+            return user;
+        }
+
+        public static UserInfo generateUserNotForDeliveryByCity(String locale) {
+            DataGenerator dataGenerator = new DataGenerator();
+            UserInfo user = new UserInfo(
+                    dataGenerator.generateCityUnavailableForDelivery(locale),
                     dataGenerator.generateName(locale),
                     dataGenerator.generatePhone(locale));
 

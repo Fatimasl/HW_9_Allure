@@ -33,7 +33,7 @@ class DeliveryTest {
     @Test
     @DisplayName("Should successful plan meeting")
     void shouldSuccessfulPlanMeeting(){
-        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
+        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUserForDelivery("ru");
         var daysToAddForFirstMeeting = 4;
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
 
@@ -58,7 +58,7 @@ class DeliveryTest {
     @Test
     @DisplayName("Should successful invite to replan meeting")
     void shouldSuccessfulInviteToReplanMeeting(){
-        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
+        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUserForDelivery("ru");
         var daysToAddForFirstMeeting = 5;
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
 
@@ -90,7 +90,7 @@ class DeliveryTest {
     @Test
     @DisplayName("Should successful replan meeting")
     void shouldSuccessfulReplanMeeting(){
-        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
+        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUserForDelivery("ru");
         var daysToAddForFirstMeeting = 6;
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
 
@@ -124,6 +124,31 @@ class DeliveryTest {
         // firstMeetingDate и secondMeetingDate. Можно также вызывать методы generateCity(locale),
         // generateName(locale), generatePhone(locale) для генерации и получения в тесте соответственно города,
         // имени и номера телефона без создания пользователя в методе generateUser(String locale) в датагенераторе
+
+    }
+
+    @Test
+    @DisplayName("Should deny to plan meeting")
+    void shouldDenyPlanMeeting(){
+        DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUserNotForDeliveryByCity("ru");
+        var daysToAddForFirstMeeting = 6;
+        var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
+
+        //планируем начальную встречу
+        $("[data-test-id='city'] input").setValue(validUser.getCity());
+
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        $("[data-test-id='date'] input").setValue(firstMeetingDate);
+
+        $("[data-test-id='name'] input").setValue(validUser.getName());
+        $("[data-test-id='phone'] input").setValue(validUser.getPhone());
+        $("[data-test-id='agreement']").click();
+        $(".grid-row button").click();
+
+//        проверка только для начальной встречи. 1 тест = 1 проверка
+        $("[data-test-id='city'] .input__sub").shouldBe(visible);
+        $("[data-test-id='city'] .input__sub").
+                shouldHave(exactText("Доставка в выбранный город недоступна"));
 
     }
 }
